@@ -1,8 +1,11 @@
+# Import libraries
 import argparse, json
 
+# Clamp return value between hi and low
 def clamp(x, lo, hi):
     return max(lo, min(hi, x))
 
+# Return SOC windows depending on mission years, eclipse_c_rate, depth of discharge fraction
 def recommend_soc_window(mission_years, eclipse_c_rate, dod_frac):
     if mission_years >= 5:
         base_low, base_high = 0.30, 0.70
@@ -15,6 +18,7 @@ def recommend_soc_window(mission_years, eclipse_c_rate, dod_frac):
         base_high -= 0.05
     return round(clamp(base_low, 0.15, 0.45), 2), round(clamp(base_high, 0.55, 0.85), 2)
 
+# Function to assess case
 def assess_case(name, orbital_period_min, eclipse_duration_min, avg_payload_power_w, nominal_battery_voltage_v, mission_years=3, usable_fraction=None):
     eclipse_h = eclipse_duration_min / 60.0
     required_energy_wh = avg_payload_power_w * eclipse_h
